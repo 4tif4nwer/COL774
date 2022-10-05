@@ -15,9 +15,9 @@ def EuclideanDistanceMatrix(x, y):
 def GaussianKernelSVM(x,y,C = 1.0,gamma = 0.001):    
     
     m = len(y)
-    squares = np.exp(-gamma * EuclideanDistanceMatrix(x, x))
+    Kernel = np.exp(-gamma * EuclideanDistanceMatrix(x, x))
     
-    P = matrix(squares * np.outer(y, y))
+    P = matrix(Kernel * np.outer(y, y))
 
     q = -np.ones((m,1))
     q = matrix(q)
@@ -39,7 +39,7 @@ def GaussianKernelSVM(x,y,C = 1.0,gamma = 0.001):
     eps = 1e-5
     supportVectors = [i for i in range(m) if abs(alpha[i]) > eps]
     
-    value = np.einsum('i,i,ij->j', alpha, y.reshape((m,)), squares)
+    value = np.einsum('i,i,ij->j', alpha, y.reshape((m,)), Kernel)
 
     inf = float('inf')
     negsupport, possupport = -inf, inf
@@ -107,8 +107,8 @@ def main():
     obj = pd.read_pickle(f"{train_data}/train_data.pickle")
 
     # We wil classify 0 and 4 since my entry number ends with 9 .
-    class1 = 1
-    class2 = 2
+    class1 = 0
+    class2 = 4
 
     print("Gaussian Kernel SVM using CVXOPT")
 

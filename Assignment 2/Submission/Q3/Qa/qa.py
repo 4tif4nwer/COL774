@@ -22,9 +22,9 @@ def confusion_matrix(Y_test, Y_pred, classes):
 def GaussianKernelSVM(x,y,C = 1.0,gamma = 0.001):    
     
     m = len(y)
-    squares = np.exp(-gamma * EuclideanDistanceMatrix(x, x))
+    Kernel = np.exp(-gamma * EuclideanDistanceMatrix(x, x))
     
-    P = matrix(squares * np.outer(y, y))
+    P = matrix(Kernel * np.outer(y, y))
 
     q = -np.ones((m,1))
     q = matrix(q)
@@ -46,7 +46,7 @@ def GaussianKernelSVM(x,y,C = 1.0,gamma = 0.001):
     eps = 1e-5
     supportVectors = [i for i in range(m) if abs(alpha[i]) > eps]
     
-    value = np.einsum('i,i,ij->j', alpha, y.reshape((m,)), squares)
+    value = np.einsum('i,i,ij->j', alpha, y.reshape((m,)), Kernel)
 
     inf = float('inf')
     negsupport, possupport = -inf, inf
