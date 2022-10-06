@@ -11,7 +11,7 @@ from sklearn.svm import SVC
 def confusion_matrix(Y_test, Y_pred, k):
     cmat = np.zeros((k, k))
     for i, j in zip(Y_pred, Y_test):
-        cmat[int(i) - 1][int(j) - 1] += 1
+        cmat[int(i)][int(j)] += 1
     return cmat
 
 

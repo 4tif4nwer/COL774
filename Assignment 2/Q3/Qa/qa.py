@@ -16,7 +16,7 @@ def EuclideanDistanceMatrix(x, y):
 def confusion_matrix(Y_test, Y_pred, classes):
     cmat = np.zeros((classes, classes))
     for i, j in zip(Y_pred, Y_test):
-        cmat[int(i) - 1][int(j) - 1] += 1
+        cmat[int(i)][int(j)] += 1
     return cmat
 
 def GaussianKernelSVM(x,y,C = 1.0,gamma = 0.001):    
@@ -182,8 +182,8 @@ def main():
     i = 1
     for img in misobj:
         plt.imshow(X_test[img].reshape((32,32,3)))
+        plt.savefig(f"cvxopt_misclf{i}_{int(Predictions[img])}.png")
         plt.savefig(f"cvxopt_misclf{i}.png")
-        
         plt.close()
         i += 1
         if i == 11:
