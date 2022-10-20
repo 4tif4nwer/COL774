@@ -23,7 +23,7 @@ def data_loader(train_data,test_data):
     Y_full_train = np.reshape(obj['labels'],(X_full_train.shape[0],1))
     X_full_train/=255
 
-    obj = pd.read_pickle(r'D:/GitHub/COL774/Assignment 2/data/part2_data/test_data.pickle')
+    obj = pd.read_pickle(f"{test_data}/test_data.pickle")
 
     X_test = np.reshape(obj['data'],(len(obj['data']),32*32*3))
     X_test = np.array(X_test,dtype = 'float64')
