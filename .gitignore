@@ -3,6 +3,8 @@
 *.zip
 *.txt
 *.csv
+*pickle
+*checkpoint.ipynb
 Assignment 2/data/part1_data/README
 Assignment 2/Q1/.ipynb_checkpoints/Q1-checkpoint.ipynb
 Assignment 2/Q2/.ipynb_checkpoints/Q2-checkpoint.ipynb
