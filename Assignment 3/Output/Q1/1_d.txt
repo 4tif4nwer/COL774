@@ -1,0 +1,9 @@
+Best estimator parameters :
+n_estimators = 1000
+max_features = 2
+min_samples_split = 20
+
+Training Accuracy : 0.8373626373626374
+Out-Of-Bag Accuracy : 0.8021978021978022
+Validation Accuracy : 0.8760330578512396
+Test Accuracy : 0.7786561264822134

@@ -1,0 +1,76 @@
+Imputation by median
+Decision Tree
+Training Accuracy : 0.9180633147113594
+Validation Accuracy : 0.7768595041322314
+Test Accuracy : 0.7193675889328063
+
+Decision Tree Grid Search
+Best estimator parameters :
+max_depth = 3
+min_samples_split = 2
+min_samples_leaf = 12
+
+Training Accuracy : 0.8007448789571695
+Validation Accuracy : 0.8760330578512396
+Test Accuracy : 0.7707509881422925
+
+Decision Tree - Cost Complexity Pruning
+Best estimator parameters :
+ccp_alpha = 0.0048475227085402195
+max_depth = 11
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 0.8417132216014898
+Validation Accuracy : 0.8842975206611571
+Test Accuracy : 0.7905138339920948
+
+Random Forest Grid Search
+Best estimator parameters :
+n_estimators = 1000
+max_features = 4
+min_samples_split = 15
+
+Training Accuracy : 0.8491620111731844
+Out-Of-Bag Accuracy : 0.7783985102420856
+Validation Accuracy : 0.859504132231405
+Test Accuracy : 0.7628458498023716
+
+Imputation by mode
+Decision Tree
+Training Accuracy : 0.9068901303538175
+Validation Accuracy : 0.7520661157024794
+Test Accuracy : 0.7114624505928854
+
+Decision Tree Grid Search
+Best estimator parameters :
+max_depth = 3
+min_samples_split = 2
+min_samples_leaf = 19
+
+Training Accuracy : 0.7970204841713222
+Validation Accuracy : 0.8925619834710744
+Test Accuracy : 0.758893280632411
+
+Decision Tree - Cost Complexity Pruning
+Best estimator parameters :
+ccp_alpha = 0.005387115385886085
+max_depth = 6
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 0.813780260707635
+Validation Accuracy : 0.9008264462809917
+Test Accuracy : 0.7509881422924901
+
+Random Forest Grid Search
+Best estimator parameters :
+n_estimators = 1000
+max_features = 2
+min_samples_split = 15
+
+Training Accuracy : 0.839851024208566
+Out-Of-Bag Accuracy : 0.7728119180633147
+Validation Accuracy : 0.8677685950413223
+Test Accuracy : 0.7747035573122529
+
