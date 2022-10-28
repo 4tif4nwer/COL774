@@ -92,6 +92,10 @@ def main():
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
         clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0)
         clf = clf.fit(training_data, y_train)
+        output_file.write("Decision Tree Parameters :\n")
+        output_file.write(f"max_depth = {clf.tree_.max_depth}\n")
+        output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
+        output_file.write(f"min_samples_leaf = {clf.min_samples_leaf}\n\n")
 
         output_file.write(f"Training Accuracy : {clf.score(training_data,y_train)}\n")
         output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
@@ -197,7 +201,7 @@ def main():
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
         
         param_grid = [
-        {'n_estimators': [i for i in range(50,451,50)], 'max_features' : [float(i/10) for i in range(1,9,1)], 'min_samples_split' : [i for i in range(2,11,2)]}  
+        {'n_estimators': [i for i in range(50,201,50)], 'max_features' : [float(i/10) for i in range(1,10,4)], 'min_samples_split' : [i for i in range(2,13,5)]}  
         ]
 
         clfs = GridSearchCV(estimator = RandomForestClassifier(criterion = 'entropy',oob_score=True,random_state=0),verbose = 2,param_grid=param_grid,n_jobs=-1)
@@ -225,7 +229,7 @@ def main():
         param_grid = [
         {'n_estimators': range(50,451,50), 'max_depth' : [40,50,60,70], 'subsample' : [0.4,0.5,0.6,0.7,0.8]}  
         ]
-
+        
         clfs = GridSearchCV(estimator = xgb.XGBClassifier(),param_grid=param_grid,verbose = 2)
         clfs = clfs.fit(training_data, y_train.reshape(-1,))
         clf = clfs.best_estimator_
@@ -242,9 +246,8 @@ def main():
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
         
         param_grid = [
-        {'n_estimators': range(50,451,50), 'max_depth' : [40,50,60,70], 'subsample' : [0.4,0.5,0.6,0.7,0.8]}  
+        {'n_estimators': range(500,2001,500), 'max_depth' : [40,50,60,70], 'subsample' : [0.4,0.5,0.6,0.7,0.8]}  
         ]
-
         clfs = GridSearchCV(estimator = lgb.LGBMClassifier(),param_grid=param_grid,verbose = 2)
         clfs = clfs.fit(training_data, y_train.reshape(-1,))
         clf = clfs.best_estimator_

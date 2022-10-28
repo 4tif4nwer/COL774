@@ -1,8 +1,8 @@
 Best estimator parameters :
-n_estimators = 450
+n_estimators = 2000
 max_depth = 40
 subsample = 0.4
 
-Training Accuracy : 0.7773674141779148
-Validation Accuracy : 0.5448965674016822
-Test Accuracy : 0.5413644310530819
+Training Accuracy : 0.9712686434973606
+Validation Accuracy : 0.6447746388642047
+Test Accuracy : 0.6418554476806904

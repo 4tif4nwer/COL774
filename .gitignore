@@ -5,3 +5,4 @@
 *pickle
 *checkpoint.ipynb
 Assignment ?/data/**
+**/__pycache__/**

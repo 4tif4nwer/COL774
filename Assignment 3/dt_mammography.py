@@ -94,6 +94,10 @@ def main():
         clf = tree.DecisionTreeClassifier(criterion='entropy',random_state=0)
         clf = clf.fit(x_train_data, y_train_data)
         plot_tree(clf,output_folder,part)
+        output_file.write("Decision Tree Parameters :\n")
+        output_file.write(f"max_depth = {clf.tree_.max_depth}\n")
+        output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
+        output_file.write(f"min_samples_leaf = {clf.min_samples_leaf}\n\n")
 
         output_file.write(f"Training Accuracy : {clf.score(x_train_data,y_train_data)}\n")
         output_file.write(f"Validation Accuracy : {clf.score(x_val_data,y_val_data)}\n")
@@ -220,6 +224,10 @@ def main():
             clf = tree.DecisionTreeClassifier(criterion='entropy',random_state=0)
             clf = clf.fit(x_train_data, y_train_data)
             plot_tree(clf,output_folder,f"{part}_{imputation}")
+            output_file.write("Decision Tree Parameters :\n")
+            output_file.write(f"max_depth = {clf.tree_.max_depth}\n")
+            output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
+            output_file.write(f"min_samples_leaf = {clf.min_samples_leaf}\n\n")
 
             output_file.write(f"Training Accuracy : {clf.score(x_train_data,y_train_data)}\n")
             output_file.write(f"Validation Accuracy : {clf.score(x_val_data,y_val_data)}\n")
