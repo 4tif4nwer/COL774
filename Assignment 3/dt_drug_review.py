@@ -118,6 +118,11 @@ def main():
         clfs = clfs.fit(training_data, y_train.reshape(-1,))
         clf = clfs.best_estimator_
 
+        test_clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0,max_depth=clf.max_depth,min_samples_split=clf.min_samples_split,min_samples_leaf=clf.min_samples_leaf)
+        start = time.time()
+        test_clf.fit(training_data,y_train)
+        end = time.time()
+
         output_file.write("Best estimator parameters :\n")
         output_file.write(f"max_depth = {clf.max_depth}\n")
         output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
@@ -126,7 +131,7 @@ def main():
         output_file.write(f"Training Accuracy : {clf.score(training_data,y_train)}\n")
         output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
         output_file.write(f"Test Accuracy : {clf.score(test_data,y_test)}\n")
-
+        output_file.write(f"Time taken to train : {end-start}\n")
         output_file.close()
 
     elif part == 'c':
@@ -212,12 +217,17 @@ def main():
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
         
         param_grid = [
-        {'n_estimators': [i for i in range(50,201,50)], 'max_features' : [float(i/10) for i in range(1,10,4)], 'min_samples_split' : [i for i in range(2,13,5)]}  
+        {'n_estimators': [i for i in range(50,451,50)], 'max_features' : [float(i/10) for i in range(4,9,1)], 'min_samples_split' : [i for i in range(2,11,2)]}  
         ]
 
         clfs = GridSearchCV(estimator = RandomForestClassifier(criterion = 'entropy',oob_score=True,random_state=0),verbose = 2,param_grid=param_grid,n_jobs=-1)
         clfs = clfs.fit(training_data, y_train.reshape(-1,))
         clf = clfs.best_estimator_
+
+        test_clf = RandomForestClassifier(criterion = 'entropy',oob_score=True,random_state=0,n_estimators=clf.n_estimators,max_features=clf.max_features,min_samples_split=clf.min_samples_split)
+        start = time.time()
+        test_clf.fit(training_data,y_train)
+        end = time.time()
 
         output_file.write("Best estimator parameters :\n")
         output_file.write(f"n_estimators = {clf.n_estimators}\n")
@@ -228,6 +238,7 @@ def main():
         output_file.write(f"Out-Of-Bag Accuracy : {clf.oob_score_}\n")
         output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
         output_file.write(f"Test Accuracy : {clf.score(test_data,y_test)}\n")
+        output_file.write(f"Training Time : {end-start}\n")
 
         output_file.close()
         
