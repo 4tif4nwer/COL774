@@ -6,3 +6,4 @@ subsample = 0.4
 Training Accuracy : 0.9712686434973606
 Validation Accuracy : 0.6447746388642047
 Test Accuracy : 0.6418554476806904
+Training Time : 185.7114601135254
