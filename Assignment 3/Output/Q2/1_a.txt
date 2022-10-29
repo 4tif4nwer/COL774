@@ -1,3 +1,9 @@
+Decision Tree Parameters :
+max_depth = 119
+min_samples_split = 2
+min_samples_leaf = 1
+
 Training Accuracy : 1.0
-Validation Accuracy : 0.5797185310711112
-Test Accuracy : 0.5755682029535394
+Validation Accuracy : 0.5733327822438984
+Test Accuracy : 0.5710486180857791
+Time taken to train : 3.8623809814453125e-05
