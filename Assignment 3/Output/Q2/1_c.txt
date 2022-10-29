@@ -1,9 +1,10 @@
 Best estimator parameters :
 ccp_alpha = 0.0
-max_depth = 185
+max_depth = 119
 min_samples_split = 2
 min_samples_leaf = 1
 
 Training Accuracy : 1.0
-Validation Accuracy : 0.5800285188782575
-Test Accuracy : 0.5763865639995536
+Validation Accuracy : 0.5747173944491517
+Test Accuracy : 0.5701558605810363
+Training Time : 119.69484782218933
