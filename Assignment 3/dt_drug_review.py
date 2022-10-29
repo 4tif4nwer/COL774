@@ -19,11 +19,17 @@ stop_words = set(stopwords.words('english'))
 import tqdm
 import re
 
-def data_loader(train_loc,val_loc,test_loc,imputation = None):
+def data_loader(train_loc,val_loc,test_loc,sample = None):
     full_train_data = pd.read_csv(f"{train_loc}/DrugsComTrain.csv",parse_dates=['date'],na_filter=False)
     full_val_data = pd.read_csv(f"{val_loc}/DrugsComVal.csv",parse_dates=['date'],na_filter=False)
     full_test_data = pd.read_csv(f"{test_loc}/DrugsComTest.csv",parse_dates=['date'],na_filter=False)
 
+    if sample:
+        if sample <= full_train_data.shape[0]:    
+            full_train_data = full_train_data.sample(n=sample,replace=False)
+        else :
+            full_train_data = full_train_data.sample(n=sample,replace=True)
+            
     def splitdate(df):
         df['year'] = df['date'].dt.year
         df['month'] = df['date'].dt.month
@@ -81,7 +87,7 @@ def main():
     test_loc = sys.argv[3]
     part = sys.argv[5]
     output_folder = sys.argv[4]
-    output_file_path = f'{output_folder}/1_{part}.txt'
+    output_file_path = f'{output_folder}/2_{part}.txt'
     output_file = open(output_file_path,"w")
 
     global training_data,y_train,val_data,y_val,test_data,y_test
@@ -90,11 +96,10 @@ def main():
         
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
 
+        clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0)        
         start = time.time()
-        clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0)
-        end = time.time()
-
         clf = clf.fit(training_data, y_train)
+        end = time.time()
         output_file.write("Decision Tree Parameters :\n")
         output_file.write(f"max_depth = {clf.tree_.max_depth}\n")
         output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
@@ -111,7 +116,7 @@ def main():
         training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc)
         
         param_grid = [
-        {'max_depth' : [i for i in range(180,261,20)], 'min_samples_split' : [i for i in range(2,40,8)], 'min_samples_leaf' : [i for i in range(1,20,5)]}  
+        {'max_depth' : [i for i in range(40,121,40)], 'min_samples_split' : [i for i in range(2,11,4)], 'min_samples_leaf' : [i for i in range(1,20,5)]}  
         ]
 
         clfs = GridSearchCV(estimator = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0),verbose = 2,param_grid=param_grid,n_jobs=-1)
@@ -150,8 +155,9 @@ def main():
         plt.savefig(f"2_{part}_Impurities_vs_alpha")
         plt.close()
         
-        ccp_samples = [ccp_alphas[i] for i in range(0,len(ccp_alphas),50)]
-        ccp_alphas = ccp_samples
+        # Taking every 100th value of ccp_alpha to reduce the number of models to be trained(I don't have time to train 32000 models :P)
+        # ccp_samples = [ccp_alphas[i] for i in range(0,len(ccp_alphas),100)]
+        # ccp_alphas = ccp_samples
 
         clfs = []
         with Pool() as p:
@@ -226,7 +232,7 @@ def main():
 
         test_clf = RandomForestClassifier(criterion = 'entropy',oob_score=True,random_state=0,n_estimators=clf.n_estimators,max_features=clf.max_features,min_samples_split=clf.min_samples_split)
         start = time.time()
-        test_clf.fit(training_data,y_train)
+        test_clf.fit(training_data,y_train.reshape(-1,))
         end = time.time()
 
         output_file.write("Best estimator parameters :\n")
@@ -234,10 +240,10 @@ def main():
         output_file.write(f"max_features = {clf.max_features}\n")
         output_file.write(f"min_samples_split = {clf.min_samples_split}\n\n")
         
-        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train)}\n")
+        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train.reshape(-1,))}\n")
         output_file.write(f"Out-Of-Bag Accuracy : {clf.oob_score_}\n")
-        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
-        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test)}\n")
+        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val.reshape(-1,))}\n")
+        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test.reshape(-1,))}\n")
         output_file.write(f"Training Time : {end-start}\n")
 
         output_file.close()
@@ -260,7 +266,7 @@ def main():
 
         test_clf = xgb.XGBClassifier(n_estimators=clf.n_estimators,max_depth=clf.max_depth,subsample=clf.subsample)
         start = time.time()
-        test_clf.fit(training_data,y_train)
+        test_clf.fit(training_data,y_train.reshape(-1,))
         end = time.time()
 
         output_file.write("Best estimator parameters :\n")
@@ -268,9 +274,9 @@ def main():
         output_file.write(f"max_depth = {clf.max_depth}\n")
         output_file.write(f"subsample = {clf.subsample}\n\n")
         
-        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train)}\n")
-        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
-        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test)}\n")
+        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train.reshape(-1,))}\n")
+        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val.reshape(-1,))}\n")
+        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test.reshape(-1,))}\n")
         output_file.write(f"Training Time : {end-start}\n")
         output_file.close()
     
@@ -286,7 +292,7 @@ def main():
 
         test_clf = lgb.LGBMClassifier(n_estimators=clf.n_estimators,max_depth=clf.max_depth,subsample=clf.subsample)
         start = time.time()
-        test_clf.fit(training_data,y_train)
+        test_clf.fit(training_data,y_train.reshape(-1,))
         end = time.time()
 
         output_file.write("Best estimator parameters :\n")
@@ -294,9 +300,9 @@ def main():
         output_file.write(f"max_depth = {clf.max_depth}\n")
         output_file.write(f"subsample = {clf.subsample}\n\n")
         
-        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train)}\n")
-        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val)}\n")
-        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test)}\n")
+        output_file.write(f"Training Accuracy : {clf.score(training_data,y_train.reshape(-1,))}\n")
+        output_file.write(f"Validation Accuracy : {clf.score(val_data,y_val.reshape(-1,))}\n")
+        output_file.write(f"Test Accuracy : {clf.score(test_data,y_test.reshape(-1,))}\n")
         output_file.write(f"Training Time : {end-start}\n")
         output_file.close()
     
@@ -306,30 +312,30 @@ def main():
         val_scores = []
         test_scores = []
         train_time = []
+        
         train_data_sizes = [i*1000 for i in range(20,141,20)]
-
+        output_file.write("Decision Tree Classifier\n\n")
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            
             clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0)
             start = time.time()
-            clf.fit(train_data,y_train_data)
+            clf.fit(training_data,y_train)
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
+            train_scores.append(clf.score(training_data,y_train))
             val_scores.append(clf.score(val_data,y_val))
             test_scores.append(clf.score(test_data,y_test))
-
-            output_file.write("Decision Tree Classifier\n")
+           
             output_file.write(f"Training data size : {train_data_size}\n")
+            output_file.write(f"max_depth = {clf.tree_.max_depth}\n")
+            output_file.write(f"min_samples_split = {clf.min_samples_split}\n")
+            output_file.write(f"min_samples_leaf = {clf.min_samples_leaf}\n\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
             output_file.write(f"Test Accuracy : {test_scores[-1]}\n\n")
             output_file.write(f"Training time : {train_time[-1]}\n\n")
+        
         
         fig,ax = plt.subplots()
         ax.plot(train_data_sizes,train_scores,label = 'Training Accuracy')
@@ -339,7 +345,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_a_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_a_Accuracy_vs_Training_Data_Size.png')
         plt.close()
 
         fig,ax = plt.subplots()
@@ -347,26 +353,26 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_a_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_a_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
+        output_file.write(f"Decision Tree with Grid Search results : max_depth = 120 | min_samples_split = 2 | min_samples_leaf = 1 \n\n")
+        train_scores.clear()
+        val_scores.clear()
+        test_scores.clear()
+        train_time.clear()
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
-            clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0,max_depth=200,min_samples_split=2,min_samples_leaf=1)
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            
+            clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0,max_depth=120,min_samples_split=2,min_samples_leaf=1)
             start = time.time()
-            clf.fit(train_data,y_train_data)
+            clf.fit(training_data,y_train)
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
+            train_scores.append(clf.score(training_data,y_train))
             val_scores.append(clf.score(val_data,y_val))
             test_scores.append(clf.score(test_data,y_test))
 
-            output_file.write(f"Decision Tree with Grid Search results : max_depth = 200 | min_samples_split = 2 | min_samples_leaf = 1 \n")
             output_file.write(f"Training data size : {train_data_size}\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
@@ -381,7 +387,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_b_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_b_Accuracy_vs_Training_Data_Size.png')
         plt.close()
 
         fig,ax = plt.subplots()
@@ -389,26 +395,26 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_b_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_b_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
+        output_file.write(f"Decision Tree with Optimal ccp_alpha = 0.0 \n\n")
+        train_scores.clear()
+        val_scores.clear()
+        test_scores.clear()
+        train_time.clear()
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            
             clf = tree.DecisionTreeClassifier(criterion = 'entropy',random_state=0,ccp_alpha=0.0)
             start = time.time()
-            clf.fit(train_data,y_train_data)
+            clf.fit(training_data,y_train)
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
+            train_scores.append(clf.score(training_data,y_train))
             val_scores.append(clf.score(val_data,y_val))
             test_scores.append(clf.score(test_data,y_test))
 
-            output_file.write(f"Decision Tree with Optimal ccp_alpha = 0.0 \n")
             output_file.write(f"Training data size : {train_data_size}\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
@@ -423,7 +429,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_c_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_c_Accuracy_vs_Training_Data_Size.png')
         plt.close()
 
         fig,ax = plt.subplots()
@@ -431,26 +437,26 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_c_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_c_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
+        output_file.write(f"Random Forest with Grid Search results :  n_estimators = 450 | max_features = 0.8 | nim_sample_split = 2 \n\n")
+        train_scores.clear()
+        val_scores.clear()
+        test_scores.clear()
+        train_time.clear()
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
-            clf = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=0)
-            start = time.time()
-            clf.fit(train_data,y_train_data)
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            
+            clf = RandomForestClassifier(n_estimators=450,max_features= 0.8, min_samples_split= 2, criterion='entropy', random_state=0,n_jobs=-1)
+            start = time.time() 
+            clf.fit(training_data,y_train.reshape(-1,))
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
-            val_scores.append(clf.score(val_data,y_val))
-            test_scores.append(clf.score(test_data,y_test))
+            train_scores.append(clf.score(training_data,y_train.reshape(-1,)))
+            val_scores.append(clf.score(val_data,y_val.reshape(-1,)))
+            test_scores.append(clf.score(test_data,y_test.reshape(-1,)))
 
-            output_file.write(f"Random Forest with Grid Search results :  \n") # Fill in the best parameters
             output_file.write(f"Training data size : {train_data_size}\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
@@ -465,7 +471,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_d_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_d_Accuracy_vs_Training_Data_Size.png')
         plt.close()
         
         fig,ax = plt.subplots()
@@ -473,26 +479,28 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_d_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_d_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
+        output_file.write(f"XGBoost with Grid Search results : n_estimators = 450 | max_depth = 40 | subsample = 0.4\n\n")
+        train_scores.clear()
+        val_scores.clear()
+        test_scores.clear()
+        train_time.clear()
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
-            clf = xgb.XGBClassifier(random_state=0, n_estimators = 450) # Fill in the best parameters (fake it)
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            xgb_y_train = le.fit_transform(y_train.reshape(-1,))
+            xgb_y_val = le.fit_transform(y_val.reshape(-1,))
+            xgb_y_test = le.fit_transform(y_test.reshape(-1,))
+            clf = xgb.XGBClassifier(random_state=0, n_estimators = 450, max_depth = 40, subsample = 0.4)
             start = time.time()
-            clf.fit(train_data,y_train_data)
+            clf.fit(training_data,xgb_y_train)
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
-            val_scores.append(clf.score(val_data,y_val))
-            test_scores.append(clf.score(test_data,y_test))
+            train_scores.append(clf.score(training_data,xgb_y_train))
+            val_scores.append(clf.score(val_data,xgb_y_val))
+            test_scores.append(clf.score(test_data,xgb_y_test))
 
-            output_file.write(f"XGBoost with Grid Search results : n_estimators = 450 | max_depth = 40 | subsample = 0.4\n") # Fill in the best parameters
             output_file.write(f"Training data size : {train_data_size}\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
@@ -507,7 +515,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_e_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_e_Accuracy_vs_Training_Data_Size.png')
         plt.close()
 
         fig,ax = plt.subplots()
@@ -515,26 +523,26 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_e_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_e_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
+        output_file.write(f"LightGBM with Grid Search results : n_estimators = 2000 | max_depth = 40 | subsample = 0.4\n\n")    
+        train_scores.clear()
+        val_scores.clear()
+        test_scores.clear()
+        train_time.clear()
         for train_data_size in train_data_sizes:
-            if train_data_size<=training_data.shape[0]:
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=False)
-            else :
-                samples = np.random.choice(training_data.shape[0],train_data_size,replace=True)
-            train_data = training_data[samples]
-            y_train_data = y_train[samples]
-            clf = lgb.LGBMClassifier(random_state=0, n_estimators = 2000,max_depth = 40,subsample = 0.4) # Fill in the best parameters 
+            training_data,y_train,val_data,y_val,test_data,y_test = data_loader(train_loc,val_loc,test_loc,sample = train_data_size)
+            
+            clf = lgb.LGBMClassifier(random_state=0, n_estimators = 2000,max_depth = 40,subsample = 0.4)
             start = time.time()
-            clf.fit(train_data,y_train_data)
+            clf.fit(training_data,y_train.reshape(-1,))
             end = time.time()
             train_time.append(end-start)
-            train_scores.append(clf.score(train_data,y_train_data))
-            val_scores.append(clf.score(val_data,y_val))
-            test_scores.append(clf.score(test_data,y_test))
+            train_scores.append(clf.score(training_data,y_train.reshape(-1,)))
+            val_scores.append(clf.score(val_data,y_val.reshape(-1,)))
+            test_scores.append(clf.score(test_data,y_test.reshape(-1,)))
 
-            output_file.write(f"LightGBM with Grid Search results : n_estimators = 2000 | max_depth = 40 | subsample = 0.4\n") 
             output_file.write(f"Training data size : {train_data_size}\n")
             output_file.write(f"Training Accuracy : {train_scores[-1]}\n")
             output_file.write(f"Validation Accuracy : {val_scores[-1]}\n")
@@ -549,7 +557,7 @@ def main():
         ax.set_ylabel('Accuracy')
         ax.set_title('Accuracy vs Training Data Size')
         ax.legend()
-        fig.savefig(f'g_f_Accuracy_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_f_Accuracy_vs_Training_Data_Size.png')
         plt.close()
 
         fig,ax = plt.subplots()
@@ -557,7 +565,7 @@ def main():
         ax.set_xlabel('Training Data Size')
         ax.set_ylabel('Training Time')
         ax.set_title('Training Time vs Training Data Size')
-        fig.savefig(f'g_f_Training_Time_vs_Training_Data_Size.png')
+        fig.savefig(f'{output_folder}/g_f_Training_Time_vs_Training_Data_Size.png')
         plt.close()
 
         output_file.close()

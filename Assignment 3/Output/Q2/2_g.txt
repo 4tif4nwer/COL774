@@ -1,0 +1,334 @@
+Decision Tree Classifier
+
+Training data size : 20000
+max_depth = 71
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.3105457851991155
+Test Accuracy : 0.3078153479894357
+
+Training time : 8.216914176940918
+
+Training data size : 40000
+max_depth = 85
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.3681621856206989
+Test Accuracy : 0.3696760034222371
+
+Training time : 23.400959968566895
+
+Training data size : 60000
+max_depth = 106
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.4283204860608816
+Test Accuracy : 0.42419000855559275
+
+Training time : 40.927162647247314
+
+Training data size : 80000
+max_depth = 102
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.48221703279671
+Test Accuracy : 0.4820890525610981
+
+Training time : 63.268272161483765
+
+Training data size : 100000
+max_depth = 120
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.5413627064002149
+Test Accuracy : 0.53796079306625
+
+Training time : 88.62660074234009
+
+Training data size : 120000
+max_depth = 124
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.46574634731033915
+Test Accuracy : 0.46588922367295316
+
+Training time : 87.41335558891296
+
+Training data size : 140000
+max_depth = 119
+min_samples_split = 2
+min_samples_leaf = 1
+
+Training Accuracy : 1.0
+Validation Accuracy : 0.48585422306722603
+Test Accuracy : 0.4832235985567087
+
+Training time : 103.9515471458435
+
+Decision Tree with Grid Search results : max_depth = 120 | min_samples_split = 2 | min_samples_leaf = 1 
+
+Training data size : 20000
+Training Accuracy : 1.0
+Validation Accuracy : 0.30994647543863274
+Test Accuracy : 0.3102890302421605
+
+Training time : 8.159633159637451
+
+Training data size : 40000
+Training Accuracy : 1.0
+Validation Accuracy : 0.3700841100250057
+Test Accuracy : 0.3688204441468586
+
+Training time : 23.031883478164673
+
+Training data size : 60000
+Training Accuracy : 1.0
+Validation Accuracy : 0.4275765153237306
+Test Accuracy : 0.42738905628092105
+
+Training time : 42.36853289604187
+
+Training data size : 80000
+Training Accuracy : 1.0
+Validation Accuracy : 0.48577155965198704
+Test Accuracy : 0.47816463936316633
+
+Training time : 64.62264704704285
+
+Training data size : 100000
+Training Accuracy : 0.99971
+Validation Accuracy : 0.5392547893116204
+Test Accuracy : 0.536361269203586
+
+Training time : 90.20272874832153
+
+Training data size : 120000
+Training Accuracy : 1.0
+Validation Accuracy : 0.4673169521998801
+Test Accuracy : 0.4611092511996429
+
+Training time : 90.4799222946167
+
+Training data size : 140000
+Training Accuracy : 1.0
+Validation Accuracy : 0.483456984025295
+Test Accuracy : 0.47879700926235913
+
+Training time : 109.40037035942078
+
+Decision Tree with Optimal ccp_alpha = 0.0 
+
+Training data size : 20000
+Training Accuracy : 1.0
+Validation Accuracy : 0.3065779412676435
+Test Accuracy : 0.3084663170033106
+
+Training time : 7.97747540473938
+
+Training data size : 40000
+Training Accuracy : 1.0
+Validation Accuracy : 0.37039409783215194
+Test Accuracy : 0.3705687609269799
+
+Training time : 22.698111057281494
+
+Training data size : 60000
+Training Accuracy : 1.0
+Validation Accuracy : 0.4293537787513691
+Test Accuracy : 0.42560354127143546
+
+Training time : 42.021713972091675
+
+Training data size : 80000
+Training Accuracy : 1.0
+Validation Accuracy : 0.485440905991031
+Test Accuracy : 0.48210765167578024
+
+Training time : 65.15213251113892
+
+Training data size : 100000
+Training Accuracy : 1.0
+Validation Accuracy : 0.5390894624811424
+Test Accuracy : 0.5363240709742216
+
+Training time : 91.08562707901001
+
+Training data size : 120000
+Training Accuracy : 1.0
+Validation Accuracy : 0.46651098390129986
+Test Accuracy : 0.46557303872335676
+
+Training time : 91.57267045974731
+
+Training data size : 140000
+Training Accuracy : 1.0
+Validation Accuracy : 0.48265101572671476
+Test Accuracy : 0.48153107912063386
+
+Training time : 108.81603479385376
+
+Random Forest with Grid Search results :  n_estimators = 450 | max_features = 0.8 | nim_sample_split = 2 
+
+Training data size : 20000
+Training Accuracy : 1.0
+Validation Accuracy : 0.4226167104093906
+Test Accuracy : 0.41976341926124316
+
+Training time : 22.490779638290405
+
+Training data size : 40000
+Training Accuracy : 1.0
+Validation Accuracy : 0.4693215400194259
+Test Accuracy : 0.47005542536175277
+
+Training time : 72.93918228149414
+
+Training data size : 60000
+Training Accuracy : 1.0
+Validation Accuracy : 0.518278947694724
+Test Accuracy : 0.517129784622252
+
+Training time : 163.92971229553223
+
+Training data size : 80000
+Training Accuracy : 1.0
+Validation Accuracy : 0.5653970943809543
+Test Accuracy : 0.5644273332589369
+
+Training time : 305.4912838935852
+
+Training data size : 100000
+Training Accuracy : 1.0
+Validation Accuracy : 0.6118126020376532
+Test Accuracy : 0.6117248818956218
+
+Training time : 487.4503185749054
+
+Training data size : 120000
+Training Accuracy : 1.0
+Validation Accuracy : 0.5514683089131828
+Test Accuracy : 0.5520403228806309
+
+Training time : 582.0634849071503
+
+Training data size : 140000
+Training Accuracy : 1.0
+Validation Accuracy : 0.5681043212300316
+Test Accuracy : 0.5662686456124688
+
+Training time : 787.1351020336151
+
+XGBoost with Grid Search results : n_estimators = 450 | max_depth = 40 | subsample = 0.4
+
+Training data size : 20000
+Training Accuracy : 0.9386
+Validation Accuracy : 0.4287751348446961
+Test Accuracy : 0.42857939962057806
+
+Training time : 63.70676255226135
+
+Training data size : 40000
+Training Accuracy : 0.870025
+Validation Accuracy : 0.46847424001322613
+Test Accuracy : 0.4692184652010564
+
+Training time : 134.9686677455902
+
+Training data size : 60000
+Training Accuracy : 0.8204333333333333
+Validation Accuracy : 0.49298394263158984
+Test Accuracy : 0.49287653907673995
+
+Training time : 183.19846630096436
+
+Training data size : 80000
+Training Accuracy : 0.7909375
+Validation Accuracy : 0.5092479695798632
+Test Accuracy : 0.5068072759736637
+
+Training time : 295.08750343322754
+
+Training data size : 100000
+Training Accuracy : 0.77407
+Validation Accuracy : 0.5264419599495753
+Test Accuracy : 0.5253691924264405
+
+Training time : 367.4839050769806
+
+Training data size : 120000
+Training Accuracy : 0.82835
+Validation Accuracy : 0.5011469548864411
+Test Accuracy : 0.5011531451102927
+
+Training time : 402.976016998291
+
+Training data size : 140000
+Training Accuracy : 0.8198571428571428
+Validation Accuracy : 0.5028828866064602
+Test Accuracy : 0.5025294795967712
+
+Training time : 479.91876339912415
+
+LightGBM with Grid Search results : n_estimators = 2000 | max_depth = 40 | subsample = 0.4
+
+Training data size : 20000
+Training Accuracy : 1.0
+Validation Accuracy : 0.42945710802041787
+Test Accuracy : 0.4304579102034743
+
+Training time : 55.67647886276245
+
+Training data size : 40000
+Training Accuracy : 0.998775
+Validation Accuracy : 0.49064870115108805
+Test Accuracy : 0.4891381170256296
+
+Training time : 82.2502613067627
+
+Training data size : 60000
+Training Accuracy : 0.99265
+Validation Accuracy : 0.5355142697720556
+Test Accuracy : 0.5343339657032325
+
+Training time : 104.49593114852905
+
+Training data size : 80000
+Training Accuracy : 0.984375
+Validation Accuracy : 0.5820744384054227
+Test Accuracy : 0.5787486515641855
+
+Training time : 124.30300879478455
+
+Training data size : 100000
+Training Accuracy : 0.97648
+Validation Accuracy : 0.6209262435677531
+Test Accuracy : 0.6179369861994569
+
+Training time : 166.43079257011414
+
+Training data size : 120000
+Training Accuracy : 0.9900916666666667
+Validation Accuracy : 0.5666163797557296
+Test Accuracy : 0.5658036677454154
+
+Training time : 237.2781858444214
+
+Training data size : 140000
+Training Accuracy : 0.9883928571428572
+Validation Accuracy : 0.5811238091301743
+Test Accuracy : 0.5796600081836104
+
+Training time : 262.9859290122986
+
