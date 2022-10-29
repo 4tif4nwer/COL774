@@ -1,3 +1,4 @@
 Scikit-learn MLPClassifier
-Train accuracy: 0.9941333333333333
-Test accuracy: 0.8751
+Train accuracy: 0.99535
+Test accuracy: 0.8767
+Training time: 2.8133392333984375e-05

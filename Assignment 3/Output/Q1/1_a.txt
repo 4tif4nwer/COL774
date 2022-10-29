@@ -1,3 +1,8 @@
+Decision Tree Parameters :
+max_depth = 20
+min_samples_split = 2
+min_samples_leaf = 1
+
 Training Accuracy : 0.9252747252747253
 Validation Accuracy : 0.7520661157024794
 Test Accuracy : 0.6996047430830039

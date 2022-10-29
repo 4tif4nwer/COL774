@@ -1,10 +1,6 @@
-import time
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import confusion_matrix
-import pandas as pd
-from matplotlib import pyplot as plt
-
 
 def one_hot_encoder(arr: np.ndarray):
     enc = OneHotEncoder()
@@ -28,8 +24,9 @@ def relu_derivative(z):
 class neuralnetwork:
 
     def __init__(self, layers, activation, activation_derivative,
-                 learning_rate=0.1, stop_epsilon=1e-8, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE', verbose=False):
+                 learning_rate=0.1, stop_epsilon=1e-5, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE', verbose=False):
         self.layers = layers
+        self.training_epochs = 0
         self.activation = activation
         self.activation_derivative = activation_derivative
         self.learning_rate = learning_rate
@@ -104,6 +101,7 @@ class neuralnetwork:
         prev_epoch_loss = float('inf')
         m = X.shape[0]
         for epoch in range(self.max_epochs):
+            self.training_epochs += 1
             curr_epoch_loss = 0
             if self.adaptive:
                 self.learning_rate = self.base_learning_rate / (1+epoch)**0.5

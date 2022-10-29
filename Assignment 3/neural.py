@@ -56,7 +56,7 @@ def main():
         plt.savefig(f'{output_folder}/{part}_training_time.png')
         plt.close()
         for n in range(len(hidden_layer_units)):
-            output_file.write(f'Hidden units: {hidden_layer_units[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]} \n\n')
+            output_file.write(f'Hidden units: {hidden_layer_units[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
     elif part == 'c':
         nns = []
@@ -90,19 +90,23 @@ def main():
         plt.savefig(f'{output_folder}/{part}_training_time.png')
         plt.close()
         for n in range(len(hidden_layer_units)):
-            output_file.write(f'Hidden units: {hidden_layer_units[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]} \n\n')
+            output_file.write(f'Hidden units: {hidden_layer_units[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
     elif part == 'd':
         nnd_sigmoid = neuralnetwork(layers = [100,100],activation = sigmoid,activation_derivative = sigmoid_derivative,adaptive=True)
+        start = time.time()
         nnd_sigmoid.fit(x_train,y_train)
+        end = time.time()
         output_file.write('Sigmoid activation function\n')
-        output_file.write(f'Train accuracy: {nnd_sigmoid.score(x_train,y_train)}\nTest accuracy: {nnd_sigmoid.score(x_test,y_test)}\n')
+        output_file.write(f'Train accuracy: {nnd_sigmoid.score(x_train,y_train)}\nTest accuracy: {nnd_sigmoid.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nnd_sigmoid.training_epochs}\n\n')
         output_file.write('Test Data Confusion Matrix\n' + str(nnd_sigmoid.confusion_matrix(x_test,y_test)) + '\n\n')
 
         nnd_relu = neuralnetwork(layers = [100,100],activation = relu,activation_derivative = relu_derivative,adaptive=True)
+        start = time.time()
         nnd_relu.fit(x_train,y_train)
+        end = time.time()
         output_file.write('ReLU activation function\n')
-        output_file.write(f'Train accuracy: {nnd_relu.score(x_train,y_train)}\nTest accuracy: {nnd_relu.score(x_test,y_test)}\n')
+        output_file.write(f'Train accuracy: {nnd_relu.score(x_train,y_train)}\nTest accuracy: {nnd_relu.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nnd_relu.training_epochs}\n\n')
         output_file.write('Test Data Confusion Matrix\n' + str(nnd_relu.confusion_matrix(x_test,y_test)) + '\n\n')
         
     elif part == 'e':
@@ -139,7 +143,7 @@ def main():
         plt.close()
         output_file.write('Sigmoid activation function\n')
         for n in range(len(num_hidden_layer)):
-            output_file.write(f'Hidden Layer Count: {num_hidden_layer[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]} \n\n')
+            output_file.write(f'Hidden Layer Count: {num_hidden_layer[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
         
         # ReLU activation function
@@ -174,7 +178,7 @@ def main():
         plt.close()
         output_file.write('ReLU activation function\n')
         for n in range(len(num_hidden_layer)):
-            output_file.write(f'Hidden Layer Count: {num_hidden_layer[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]} \n\n')
+            output_file.write(f'Hidden Layer Count: {num_hidden_layer[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
 
     elif part == 'f':
@@ -183,7 +187,7 @@ def main():
         nnf.fit(x_train,y_train)
         end = time.time()
         output_file.write(f'ReLU activation function , Layers : {str([50]*2)}, objective function : BCE\n')
-        output_file.write(f'Train accuracy: {nnf.score(x_train,y_train)}\nTest accuracy: {nnf.score(x_test,y_test)}\nTraining time: {end-start}\n')
+        output_file.write(f'Train accuracy: {nnf.score(x_train,y_train)}\nTest accuracy: {nnf.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nnf.training_epochs}\n\n')
     elif part == 'g':
         start = time.time()
         clf = MLPClassifier(hidden_layer_sizes=(100,100),activation='relu',solver='sgd',max_iter=1000)

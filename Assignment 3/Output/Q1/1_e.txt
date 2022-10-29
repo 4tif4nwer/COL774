@@ -1,5 +1,10 @@
 Imputation by median
 Decision Tree
+Decision Tree Parameters :
+max_depth = 16
+min_samples_split = 2
+min_samples_leaf = 1
+
 Training Accuracy : 0.9180633147113594
 Validation Accuracy : 0.7768595041322314
 Test Accuracy : 0.7193675889328063
@@ -38,6 +43,11 @@ Test Accuracy : 0.7628458498023716
 
 Imputation by mode
 Decision Tree
+Decision Tree Parameters :
+max_depth = 18
+min_samples_split = 2
+min_samples_leaf = 1
+
 Training Accuracy : 0.9068901303538175
 Validation Accuracy : 0.7520661157024794
 Test Accuracy : 0.7114624505928854
@@ -54,12 +64,12 @@ Test Accuracy : 0.758893280632411
 
 Decision Tree - Cost Complexity Pruning
 Best estimator parameters :
-ccp_alpha = 0.005387115385886085
+ccp_alpha = 0.006043040033215142
 max_depth = 6
 min_samples_split = 2
 min_samples_leaf = 1
 
-Training Accuracy : 0.813780260707635
+Training Accuracy : 0.8119180633147114
 Validation Accuracy : 0.9008264462809917
 Test Accuracy : 0.7509881422924901
 

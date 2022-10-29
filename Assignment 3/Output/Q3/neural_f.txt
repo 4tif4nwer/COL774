@@ -1,4 +1,6 @@
-ReLU activation function , Layers : [50, 50, 50], objective function : BCE
-Train accuracy: 0.9786166666666667
-Test accuracy: 0.8645
-Training time: 883.4592373371124
+ReLU activation function , Layers : [50, 50], objective function : BCE
+Train accuracy: 0.9691833333333333
+Test accuracy: 0.8695
+Training time: 546.2195246219635
+Training epochs: 1000
+
