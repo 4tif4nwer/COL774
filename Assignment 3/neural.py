@@ -21,7 +21,7 @@ def main():
     test_loc = sys.argv[2]
     part = sys.argv[4]
     output_folder = sys.argv[3]
-    output_file_path = f'{output_folder}/neural_{part}.txt'
+    output_file_path = f'{output_folder}/{part}.txt'
     output_file = open(output_file_path,"w")
     x_train, y_train, x_test, y_test = dataloader(train_loc,test_loc)
     if part == 'b' :
@@ -130,14 +130,14 @@ def main():
         fig,ax = plt.subplots()
         ax.plot(num_hidden_layer,train_scores,label = 'train')
         ax.plot(num_hidden_layer,test_scores,label = 'test')
-        ax.set_xlabel('Number of hidden units')
+        ax.set_xlabel('Number of hidden layers')
         ax.set_ylabel('Accuracy')
         ax.legend()
         plt.savefig(f'{output_folder}/{part}_sigmoid_accuracy.png')
         plt.close()
         fig,ax = plt.subplots()
         ax.plot(num_hidden_layer,traintime)
-        ax.set_xlabel('Number of hidden units')
+        ax.set_xlabel('Number of hidden layers')
         ax.set_ylabel('Training time')
         plt.savefig(f'{output_folder}/{part}_sigmoid_training_time.png')
         plt.close()
@@ -165,14 +165,14 @@ def main():
         fig,ax = plt.subplots()
         ax.plot(num_hidden_layer,train_scores,label = 'train')
         ax.plot(num_hidden_layer,test_scores,label = 'test')
-        ax.set_xlabel('Number of hidden units')
+        ax.set_xlabel('Number of hidden layers')
         ax.set_ylabel('Accuracy')
         ax.legend()
         plt.savefig(f'{output_folder}/{part}_relu_accuracy.png')
         plt.close()
         fig,ax = plt.subplots()
         ax.plot(num_hidden_layer,traintime)
-        ax.set_xlabel('Number of hidden units')
+        ax.set_xlabel('Number of hidden layers')
         ax.set_ylabel('Training time')
         plt.savefig(f'{output_folder}/{part}_relu_training_time.png')
         plt.close()

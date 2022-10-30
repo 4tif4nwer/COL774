@@ -23,9 +23,9 @@ def relu_derivative(z):
 
 class neuralnetwork:
 
-    def __init__(self, layers, activation, activation_derivative,
-                 learning_rate=0.1, stop_epsilon=1e-5, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE', verbose=False):
-        self.layers = layers
+    def __init__(self, layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-8, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE'):
+        
+        self.hidden_layers = layers
         self.training_epochs = 0
         self.activation = activation
         self.activation_derivative = activation_derivative
@@ -36,20 +36,19 @@ class neuralnetwork:
         self.max_epochs = max_epochs
         self.adaptive = adaptive
         self.objective_function = objective_function
-        self.verbose = verbose
+        self.layers = []
         self.weights = []
         self.biases = []
         self.output = []
-        # self.init_weights_biases()
-    def init_weights_biases(self):
+        
+    def xavierinit_weights_biases(self):
         for i in range(1, len(self.layers)):
             self.weights.append(np.random.randn(
-                self.layers[i], self.layers[i - 1]) * (2 / self.layers[i - 1]) ** 0.5)
-            self.biases.append(np.random.randn(
-                self.layers[i], 1) * (2 / self.layers[i - 1]) ** 0.5)
+                self.layers[i], self.layers[i - 1]) / np.sqrt(self.layers[i - 1]))
+            self.biases.append(np.zeros((self.layers[i], 1)))
                 
     def forward_propagation(self, X):
-        self.output = [X]
+        self.output = [X] # input layer
         for i in range(len(self.weights)-1):
             net = np.dot(self.weights[i], self.output[i]) + self.biases[i]
             self.output.append(self.activation(net))
@@ -60,35 +59,35 @@ class neuralnetwork:
     def back_propagation(self, X, y):
         m = X.shape[1]
         self.forward_propagation(X)
-        delta = [None] * len(self.weights)
+        delta = []
         if self.objective_function == 'MSE':
-            delta[-1] = (self.output[-1] - y) * sigmoid_derivative(self.output[-1])
+            delta.insert(0,(self.output[-1] - y) * sigmoid_derivative(self.output[-1]))
         elif self.objective_function == 'BCE':
-            delta[-1] = (self.output[-1] - y)
+            delta.insert(0,self.output[-1] - y)
         
         for i in range(len(self.weights)-2, -1, -1):
-            delta[i] = np.dot(self.weights[i+1].T, delta[i+1]) * self.activation_derivative(self.output[i+1])
+            delta.insert(0,np.dot(self.weights[i+1].T, delta[0]) * self.activation_derivative(self.output[i+1]))
         for i in range(len(self.weights)):
-            self.weights[i] -= self.learning_rate * \
-                np.dot(delta[i], self.output[i].T) / m
-            self.biases[i] -= self.learning_rate * np.sum(
-                delta[i], axis=1, keepdims=True) / m
+            self.weights[i] -= self.learning_rate * np.dot(delta[i], self.output[i].T) / m
+            self.biases[i] -= self.learning_rate * np.sum(delta[i], axis=1, keepdims=True) / m
 
     def predict(self, X, one_hot=False):
+        y_pred = self.forward_propagation(X.T).T
         if one_hot:
-            return self.forward_propagation(X.T).T
+            return y_pred
         
-        return np.argmax(self.forward_propagation(X.T).T, axis=1)
+        return np.argmax(y_pred, axis=1)
     
     def score(self, X, y):
         return np.mean(self.predict(X) == y)
     
     def loss_function(self,X,y):
+        m = X.shape[0]
         if self.objective_function == 'MSE':
-            return np.sum(np.square(self.predict(X,one_hot=True) - y))/(2*X.shape[0])
+            return np.sum(np.square(self.predict(X,one_hot=True) - y))/(2*m)
         elif self.objective_function == 'BCE':
             y_pred = self.predict(X,one_hot=True)
-            return -np.sum(y*np.log(y_pred) + (1-y)*np.log(1-y_pred))/X.shape[0]
+            return -np.sum(y*np.log(y_pred) + (1-y)*np.log(1-y_pred))/m
     
     def confusion_matrix(self,X,y):
         y_pred = self.predict(X)
@@ -96,15 +95,15 @@ class neuralnetwork:
     
     def fit(self, X, y):
         y = one_hot_encoder(y.reshape(-1, 1))
-        self.layers = [X.shape[1]] + self.layers + [y.shape[1]]
-        self.init_weights_biases()
+        self.layers = [X.shape[1]] + self.hidden_layers + [y.shape[1]]
+        self.xavierinit_weights_biases()
         prev_epoch_loss = float('inf')
         m = X.shape[0]
         for epoch in range(self.max_epochs):
             self.training_epochs += 1
             curr_epoch_loss = 0
             if self.adaptive:
-                self.learning_rate = self.base_learning_rate / (1+epoch)**0.5
+                self.learning_rate = self.base_learning_rate / np.sqrt(1+epoch)
             for i in range(0, m, self.batch_size):
                 self.back_propagation(X[i:i+self.batch_size].T, y[i:i+self.batch_size].T)
                 curr_epoch_loss += self.loss_function(X[i:i+self.batch_size],y[i:i+self.batch_size])
@@ -113,9 +112,5 @@ class neuralnetwork:
             if self.stop_epsilon >  abs(prev_epoch_loss - curr_epoch_loss):
                 break
             prev_epoch_loss = curr_epoch_loss
-            if self.verbose:
-                if epoch % 100 == 0:
-                    print(f"Epoch {epoch}")
-                    print(f"Loss: {self.loss(X, y)}")
-                    print(f"Accuracy: {self.accuracy(X, y)}")
+            
             
