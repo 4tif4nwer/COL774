@@ -4,7 +4,7 @@ def confusion_matrix(y_true, y_pred):
     y_true = y_true.astype(int)
     y_pred = y_pred.astype(int)
     n_classes = np.max(y_true) + 1
-    cmatrix = np.zeros((n_classes, n_classes))
+    cmatrix = np.zeros((n_classes, n_classes),dtype = int)
     for i in range(y_true.shape[0]):
         cmatrix[y_true[i], y_pred[i]] += 1
     return cmatrix
