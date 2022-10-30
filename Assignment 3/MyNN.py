@@ -1,14 +1,18 @@
 import numpy as np
 
 def confusion_matrix(y_true, y_pred):
-    cmatrix = np.zeros(y_true.shape[1], y_true.shape[1])
+    y_true = y_true.astype(int)
+    y_pred = y_pred.astype(int)
+    n_classes = np.max(y_true) + 1
+    cmatrix = np.zeros((n_classes, n_classes))
     for i in range(y_true.shape[0]):
         cmatrix[y_true[i], y_pred[i]] += 1
     return cmatrix
 
 def one_hot_encoder(y):
-    n_values = np.max(y) + 1
-    return np.eye(n_values)[y]
+    y_int = y.astype(int).reshape(-1,)
+    n_values = np.max(y_int) + 1
+    return np.eye(n_values)[y_int]
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
@@ -27,7 +31,7 @@ def relu_derivative(z):
 
 class neuralnetwork:
 
-    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE'):
+    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=10, adaptive=False, objective_function = 'MSE'):
         
         self.hidden_layers = hidden_layers
         self.training_epochs = 0
