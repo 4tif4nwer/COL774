@@ -31,7 +31,7 @@ def relu_derivative(z):
 
 class neuralnetwork:
 
-    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=10, adaptive=False, objective_function = 'MSE'):
+    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE'):
         
         self.hidden_layers = hidden_layers
         self.training_epochs = 0
