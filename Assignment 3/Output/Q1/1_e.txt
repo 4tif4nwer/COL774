@@ -21,14 +21,14 @@ Test Accuracy : 0.7707509881422925
 
 Decision Tree - Cost Complexity Pruning
 Best estimator parameters :
-ccp_alpha = 0.0048475227085402195
+ccp_alpha = 0.0037673884288719553
 max_depth = 11
 min_samples_split = 2
 min_samples_leaf = 1
 
-Training Accuracy : 0.8417132216014898
+Training Accuracy : 0.8584729981378026
 Validation Accuracy : 0.8842975206611571
-Test Accuracy : 0.7905138339920948
+Test Accuracy : 0.7865612648221344
 
 Random Forest Grid Search
 Best estimator parameters :
@@ -64,14 +64,14 @@ Test Accuracy : 0.758893280632411
 
 Decision Tree - Cost Complexity Pruning
 Best estimator parameters :
-ccp_alpha = 0.006043040033215142
-max_depth = 6
+ccp_alpha = 0.0031882073652631823
+max_depth = 9
 min_samples_split = 2
 min_samples_leaf = 1
 
-Training Accuracy : 0.8119180633147114
+Training Accuracy : 0.8342644320297952
 Validation Accuracy : 0.9008264462809917
-Test Accuracy : 0.7509881422924901
+Test Accuracy : 0.7391304347826086
 
 Random Forest Grid Search
 Best estimator parameters :

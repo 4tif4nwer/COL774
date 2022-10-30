@@ -1,6 +1,18 @@
 ReLU activation function , Layers : [50, 50], objective function : BCE
-Train accuracy: 0.9691833333333333
-Test accuracy: 0.8695
-Training time: 546.2195246219635
+Train accuracy: 0.9682333333333333
+Test accuracy: 0.874
+Training time: 824.8647201061249
 Training epochs: 1000
+
+Test Data Confusion Matrix
+[[847   4  19  37   4   1  76   1  11   0]
+ [  4 969   3  11   7   0   3   0   3   0]
+ [ 22   1 808  15  83   1  67   0   3   0]
+ [ 35  13  15 886  33   1  12   0   5   0]
+ [  0   0 113  41 788   0  53   0   5   0]
+ [  0   0   0   0   0 960   0  25   1  14]
+ [149   2  85  36  77   0 635   0  14   2]
+ [  0   0   0   0   0  28   0 929   0  43]
+ [ 12   0   4   8   6   5   7   2 956   0]
+ [  0   1   0   0   1  10   1  25   0 962]]
 

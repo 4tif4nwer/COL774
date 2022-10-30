@@ -7,6 +7,13 @@ import sys
 import time
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
+
+def confusion_matrix(y_true, y_pred):
+    cmatrix = np.zeros(y_true.shape[1], y_true.shape[1])
+    for i in range(y_true.shape[0]):
+        cmatrix[y_true[i], y_pred[i]] += 1
+    return cmatrix
+
 def dataloader(train,test):
     training_data = pd.read_csv(f'{train}/fmnist_train.csv',header=None).to_numpy(dtype = 'float')
     x_train, y_train = training_data[:, :-1]/255, training_data[:, -1]
@@ -24,13 +31,14 @@ def main():
     output_file_path = f'{output_folder}/{part}.txt'
     output_file = open(output_file_path,"w")
     x_train, y_train, x_test, y_test = dataloader(train_loc,test_loc)
+
     if part == 'b' :
         nns = []
         traintime = []
         hidden_layer_units = [5,10,15,20,25]
         for n in tqdm.tqdm(hidden_layer_units):
             
-            nnb = neuralnetwork(layers=[n],activation=sigmoid,activation_derivative=sigmoid_derivative)
+            nnb = neuralnetwork(hidden_layers=[n],activation=sigmoid,activation_derivative=sigmoid_derivative)
             start = time.time()
             nnb.fit(x_train,y_train)
             end = time.time()
@@ -64,7 +72,7 @@ def main():
         hidden_layer_units = [5,10,15,20,25]
         for n in tqdm.tqdm(hidden_layer_units):
             
-            nnc = neuralnetwork(layers=[n],activation=sigmoid,activation_derivative=sigmoid_derivative,adaptive=True)
+            nnc = neuralnetwork(hidden_layers=[n],activation=sigmoid,activation_derivative=sigmoid_derivative,adaptive=True)
             start = time.time()
             nnc.fit(x_train,y_train)
             end = time.time()
@@ -93,7 +101,7 @@ def main():
             output_file.write(f'Hidden units: {hidden_layer_units[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
     elif part == 'd':
-        nnd_sigmoid = neuralnetwork(layers = [100,100],activation = sigmoid,activation_derivative = sigmoid_derivative,adaptive=True)
+        nnd_sigmoid = neuralnetwork(hidden_layers = [100,100],activation = sigmoid,activation_derivative = sigmoid_derivative,adaptive=True)
         start = time.time()
         nnd_sigmoid.fit(x_train,y_train)
         end = time.time()
@@ -101,7 +109,7 @@ def main():
         output_file.write(f'Train accuracy: {nnd_sigmoid.score(x_train,y_train)}\nTest accuracy: {nnd_sigmoid.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nnd_sigmoid.training_epochs}\n\n')
         output_file.write('Test Data Confusion Matrix\n' + str(nnd_sigmoid.confusion_matrix(x_test,y_test)) + '\n\n')
 
-        nnd_relu = neuralnetwork(layers = [100,100],activation = relu,activation_derivative = relu_derivative,adaptive=True)
+        nnd_relu = neuralnetwork(hidden_layers = [100,100],activation = relu,activation_derivative = relu_derivative,adaptive=True)
         start = time.time()
         nnd_relu.fit(x_train,y_train)
         end = time.time()
@@ -116,7 +124,7 @@ def main():
         # Sigmoid activation function
         for n in tqdm.tqdm(num_hidden_layer):
             
-            nne = neuralnetwork(layers=[50]*n,activation=sigmoid,activation_derivative=sigmoid_derivative,adaptive=True)
+            nne = neuralnetwork(hidden_layers=[50]*n,activation=sigmoid,activation_derivative=sigmoid_derivative,adaptive=True)
             start = time.time()
             nne.fit(x_train,y_train)
             end = time.time()
@@ -151,7 +159,7 @@ def main():
         traintime = []
         for n in tqdm.tqdm(num_hidden_layer):
                 
-                nne = neuralnetwork(layers=[50]*n,activation=relu,activation_derivative=relu_derivative,adaptive=True)
+                nne = neuralnetwork(hidden_layers=[50]*n,activation=relu,activation_derivative=relu_derivative,adaptive=True)
                 start = time.time()
                 nne.fit(x_train,y_train)
                 end = time.time()
@@ -182,20 +190,22 @@ def main():
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
 
     elif part == 'f':
-        nnf = neuralnetwork(layers = [50]*2,activation = relu,activation_derivative = relu_derivative,adaptive=True,objective_function='BCE')
+        nnf = neuralnetwork(hidden_layers = [50]*2,activation = relu,activation_derivative = relu_derivative,adaptive=True,objective_function='BCE')
         start = time.time()
         nnf.fit(x_train,y_train)
         end = time.time()
         output_file.write(f'ReLU activation function , Layers : {str([50]*2)}, objective function : BCE\n')
         output_file.write(f'Train accuracy: {nnf.score(x_train,y_train)}\nTest accuracy: {nnf.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nnf.training_epochs}\n\n')
+        output_file.write('Test Data Confusion Matrix\n' + str(nnf.confusion_matrix(x_test,y_test)) + '\n\n')
     elif part == 'g':
-        start = time.time()
+        
         clf = MLPClassifier(hidden_layer_sizes=(100,100),activation='relu',solver='sgd',max_iter=1000)
-        end = time.time()
+        start = time.time()
         clf.fit(x_train,y_train)
+        end = time.time()
         output_file.write('Scikit-learn MLPClassifier\n')
         output_file.write(f'Train accuracy: {clf.score(x_train,y_train)}\nTest accuracy: {clf.score(x_test,y_test)}\nTraining time: {end-start}\n')
-
+        output_file.write('Test Data Confusion Matrix\n' + str(confusion_matrix(y_test,clf.predict(x_test))) + '\n\n')
 if __name__ == '__main__':
     main()
 

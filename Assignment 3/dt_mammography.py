@@ -58,7 +58,7 @@ def plot_tree(clf,save_loc,part):
     plt.rcParams['figure.dpi'] = 500
     plt.rcParams['figure.figsize']=[18,18]    
     fig,ax = plt.subplots()
-    tree.plot_tree(clf, feature_names=["Age","Shape","Margin","Density"],ax = ax)
+    tree.plot_tree(clf, feature_names=["Age","Shape","Margin","Density"],ax = ax,filled=True)
     os.chdir(save_loc)
     plt.savefig(f"1_{part}_dtree.png")
     os.chdir('..')
