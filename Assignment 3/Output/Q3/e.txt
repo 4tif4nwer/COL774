@@ -144,3 +144,41 @@ Test Data Confusion Matrix
  [  5   0   4   7   6   2   8   3 965   0]
  [  0   1   0   1   0   7   0  27   2 962]]
 
+Experiment with different hidden layer units
+ReLU activation function , Layers : [25, 50]
+Train accuracy: 0.8810833333333333
+Test accuracy: 0.8608
+Training time: 59.936538219451904
+Training epochs: 100
+
+ReLU activation function , Layers : [50, 25]
+Train accuracy: 0.88815
+Test accuracy: 0.8654
+Training time: 68.6731653213501
+Training epochs: 100
+
+ReLU activation function , Layers : [50, 50]
+Train accuracy: 0.8895
+Test accuracy: 0.8681
+Training time: 73.41941738128662
+Training epochs: 100
+
+ReLU activation function , Layers : [25, 25, 25]
+Train accuracy: 0.7302
+Test accuracy: 0.7123
+Training time: 63.94891858100891
+Training epochs: 100
+
+ReLU activation function , Layers : [25, 50, 25]
+Train accuracy: 0.88605
+Test accuracy: 0.8611
+Training time: 66.26634335517883
+Training epochs: 100
+
+Experiment with different hidden layer units
+ReLU activation function , Layers : [25, 50]
+Train accuracy: 0.9183166666666667
+Test accuracy: 0.872
+Training time: 611.487498998642
+Training epochs: 1000
+

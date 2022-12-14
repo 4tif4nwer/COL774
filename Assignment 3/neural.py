@@ -34,14 +34,11 @@ def relu(z):
 
 
 def relu_derivative(z):
-    if z > 0:
-        return 1.0
-    else:
-        return 0.0
+    return 1. * (z > 0)
 
 class neuralnetwork:
 
-    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=10, adaptive=False, objective_function = 'MSE'):
+    def __init__(self, hidden_layers, activation, activation_derivative,learning_rate=0.1, stop_epsilon=1e-6, batch_size=100, max_epochs=1000, adaptive=False, objective_function = 'MSE'):
         
         self.hidden_layers = hidden_layers
         self.training_epochs = 0
@@ -314,6 +311,25 @@ def main():
             output_file.write(f'Hidden Layer Count: {num_hidden_layer[n]}\nTrain accuracy: {train_scores[n]}\nTest accuracy: {test_scores[n]}\nTraining time: {traintime[n]}\nTraining epochs: {nns[n].training_epochs} \n\n')
             output_file.write('Test Data Confusion Matrix\n' + str(nns[n].confusion_matrix(x_test,y_test)) + '\n\n')
 
+        # Experiment with different hidden layer units
+        
+        nne = neuralnetwork(hidden_layers=[50,75],activation=relu,activation_derivative=relu_derivative,adaptive=True)
+        start = time.time()
+        nne.fit(x_train,y_train)
+        end = time.time()
+        output_file.write(f'ReLU activation function , Layers : {str([50,75])}\n')
+        print(f'ReLU activation function , Layers : {str([50,75])}')
+        output_file.write(f'Train accuracy: {nne.score(x_train,y_train)}\nTest accuracy: {nne.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nne.training_epochs}\n\n')
+        print(f'Train accuracy: {nne.score(x_train,y_train)}\nTest accuracy: {nne.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nne.training_epochs}\n\n')
+        
+        nne = neuralnetwork(hidden_layers=[25,50,25],activation=relu,activation_derivative=relu_derivative,adaptive=True)
+        start = time.time()
+        nne.fit(x_train,y_train)
+        end = time.time()
+        output_file.write(f'ReLU activation function , Layers : {str([25,50,25])}\n')
+        output_file.write(f'Train accuracy: {nne.score(x_train,y_train)}\nTest accuracy: {nne.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nne.training_epochs}\n\n')
+        print(f'ReLU activation function , Layers : {str([25,50,25])}')
+        print(f'Train accuracy: {nne.score(x_train,y_train)}\nTest accuracy: {nne.score(x_test,y_test)}\nTraining time: {end-start}\nTraining epochs: {nne.training_epochs}\n\n')
     elif part == 'f':
         nnf = neuralnetwork(hidden_layers = [50]*2,activation = relu,activation_derivative = relu_derivative,adaptive=True,objective_function='BCE')
         start = time.time()
