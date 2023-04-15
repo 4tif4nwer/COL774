@@ -1,3 +1,3 @@
 ## Assignment 2
-### Naive Bayes
-### SVM
+#### Naive Bayes
+#### SVM
